@@ -1,0 +1,9 @@
+Database.Connect ConnectionString: $'''DSN=EscolaDB;''' Connection=> SQLConnection
+Database.ExecuteSqlStatement.Execute Connection: SQLConnection Statement: $'''SELECT * FROM financeiro WHERE Status_Pagamento = \'Pendente\'''' Timeout: 30 Result=> QueryResult
+LOOP FOREACH CurrentItem IN QueryResult
+    Text.ToNumber Text: CurrentItem[2] Number=> MensalidadeNum
+    Text.ToNumber Text: CurrentItem[3] Number=> DescontoNum
+    SET ValorFinal TO MensalidadeNum - (MensalidadeNum * DescontoNum / 100)
+    Display.ShowMessageDialog.ShowMessage Title: $'''Processamento de Pagamento''' Message: $'''O aluno %CurrentItem[1]% tem um valor final de R$ %ValorFinal%''' Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+    Display.ShowMessageDialog.ShowMessage Message: $'''O aluno %CurrentItem[1]% pagará o valor integral: R$ %CurrentItem[2]%''' Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed2
+END
